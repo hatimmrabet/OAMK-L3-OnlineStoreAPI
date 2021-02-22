@@ -26,6 +26,9 @@ app.use(bodyParser.json());
 app.use(cors());
 
 /* demonstrate route module/component usage - the dogComponent content is defined in separate file */
+app.get('/', function(req, res) {
+    res.send("Welcome to My API, M'rabet El Khomssi Hatim");
+});
 app.use('/users/login', loginComponent.router)
 app.use('/users', userComponent);
 app.use('/items', itemComponent);
