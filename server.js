@@ -6,6 +6,21 @@ const userComponent = require('./components/users');
 const itemComponent = require('./components/items');
 const loginComponent = require('./components/login')
 const cors = require('cors');
+/*
+var cloudinary = require('cloudinary');
+var cloudinaryStorage = require('multer-storage-cloudinary');
+
+// Config cloudinary storage for multer-storage-cloudinary
+var storage = cloudinaryStorage({
+  cloudinary: cloudinary,
+  folder: '', // give cloudinary folder where you want to store images
+  allowedFormats: ['jpg', 'png'],
+});
+
+var parser = multer({ storage: storage });
+*/
+// You can store key-value pairs in express, here we store the port setting
+app.set('port', (process.env.PORT || 80));
 
 app.use(bodyParser.json());
 app.use(cors());
@@ -47,8 +62,8 @@ let serverInstance = null;
 
 module.exports = {
   start: function() {
-    serverInstance = app.listen(port, () => {
-        console.log(`\nExample API listening on http://localhost:${port}`);
+    serverInstance = app.listen(app.get('port'), () => {
+        console.log(`\nExample API listening on http://localhost:`+app.get('port'));
         console.log('Available API endpoints');
         console.log('-- Private endpoints :');
 		console.log('  /users \t\t\t[GET, POST]');
