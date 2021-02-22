@@ -38,7 +38,7 @@ describe('Testing route : [/items/{ItemID}/images]', function () {
             await chai.request(apiAddress)
                 .post('/items/a52fa527-33c8-400a-b8bf-4e734ca963b0/images')
                 .set('Authorization', 'Bearer ' + userJwt)
-                .attach("images","D:/Bureau/img/20210207_121427.jpg")
+                .attach("images","./test/picture/testPicture.jpg")
                 .then(response => {
                     expect(response).to.have.property('status');
                     expect(response.status).to.equal(201);
@@ -52,7 +52,7 @@ describe('Testing route : [/items/{ItemID}/images]', function () {
             await chai.request(apiAddress)
                 .post('/items/e51298e8-f811-4fa9-8386-05035144f00a/images')
                 .set('Authorization', 'Bearer ' + userJwt)
-                .attach("images","D:/Bureau/img/20210207_121427.jpg")
+                .attach("images","./test/picture/testPicture.jpg")
                 .then(response => {
                     expect(response).to.have.property('status');
                     expect(response.status).to.equal(403);
@@ -66,7 +66,7 @@ describe('Testing route : [/items/{ItemID}/images]', function () {
             await chai.request(apiAddress)
                 .post('/items/0000220000000/images')
                 .set('Authorization', 'Bearer ' + userJwt)
-                .attach("images","D:/Bureau/img/20210207_121427.jpg")
+                .attach("images","./test/picture/testPicture.jpg")
                 .then(response => {
                     expect(response).to.have.property('status');
                     expect(response.status).to.equal(404);
@@ -80,11 +80,11 @@ describe('Testing route : [/items/{ItemID}/images]', function () {
             await chai.request(apiAddress)
                 .post('/items/a52fa527-33c8-400a-b8bf-4e734ca963b0/images')
                 .set('Authorization', 'Bearer ' + userJwt)
-                .attach("images","D:/Bureau/img/20210207_121427.jpg")
-                .attach("images","D:/Bureau/img/20210207_121427.jpg")
-                .attach("images","D:/Bureau/img/20210207_121427.jpg")
-                .attach("images","D:/Bureau/img/20210207_121427.jpg")
-                .attach("images","D:/Bureau/img/20210207_121427.jpg")
+                .attach("images","./test/picture/testPicture.jpg")
+                .attach("images","./test/picture/testPicture.jpg")
+                .attach("images","./test/picture/testPicture.jpg")
+                .attach("images","./test/picture/testPicture.jpg")
+                .attach("images","./test/picture/testPicture.jpg")
                 .then(response => {
                     expect(response).to.have.property('status');
                     expect(response.status).to.equal(400);
@@ -111,7 +111,7 @@ describe('Testing route : [/items/{ItemID}/images]', function () {
             await chai.request(apiAddress)
                 .put('/items/a52fa527-33c8-400a-b8bf-4e734ca963b0/images')
                 .set('Authorization', 'Bearer ' + userJwt)
-                .attach("images","D:/Bureau/img/20210207_121427.jpg")
+                .attach("images","./test/picture/testPicture.jpg")
                 .then(response => {
                     expect(response).to.have.property('status');
                     expect(response.status).to.equal(200);
@@ -125,7 +125,7 @@ describe('Testing route : [/items/{ItemID}/images]', function () {
             await chai.request(apiAddress)
                 .put('/items/e51298e8-f811-4fa9-8386-05035144f00a/images')
                 .set('Authorization', 'Bearer ' + userJwt)
-                .attach("images","D:/Bureau/img/20210207_121427.jpg")
+                .attach("images","./test/picture/testPicture.jpg")
                 .then(response => {
                     expect(response).to.have.property('status');
                     expect(response.status).to.equal(403);
@@ -139,7 +139,7 @@ describe('Testing route : [/items/{ItemID}/images]', function () {
             await chai.request(apiAddress)
                 .put('/items/0000000000000/images')
                 .set('Authorization', 'Bearer ' + userJwt)
-                .attach("images","D:/Bureau/img/20210207_121427.jpg")
+                .attach("images","./test/picture/testPicture.jpg")
                 .then(response => {
                     expect(response).to.have.property('status');
                     expect(response.status).to.equal(404);
@@ -153,11 +153,11 @@ describe('Testing route : [/items/{ItemID}/images]', function () {
             await chai.request(apiAddress)
                 .post('/items/a52fa527-33c8-400a-b8bf-4e734ca963b0/images')
                 .set('Authorization', 'Bearer ' + userJwt)
-                .attach("images","D:/Bureau/img/20210207_121427.jpg")
-                .attach("images","D:/Bureau/img/20210207_121427.jpg")
-                .attach("images","D:/Bureau/img/20210207_121427.jpg")
-                .attach("images","D:/Bureau/img/20210207_121427.jpg")
-                .attach("images","D:/Bureau/img/20210207_121427.jpg")
+                .attach("images","./test/picture/testPicture.jpg")
+                .attach("images","./test/picture/testPicture.jpg")
+                .attach("images","./test/picture/testPicture.jpg")
+                .attach("images","./test/picture/testPicture.jpg")
+                .attach("images","./test/picture/testPicture.jpg")
                 .then(response => {
                     expect(response).to.have.property('status');
                     expect(response.status).to.equal(400);
