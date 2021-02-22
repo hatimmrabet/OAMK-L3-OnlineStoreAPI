@@ -1,0 +1,112 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema",
+    "$id": "http://example.com/example.json",
+    "type": "object",
+    "title": "The root schema",
+    "description": "The root schema comprises the entire JSON document.",
+    "default": {},
+    "examples": [
+        {
+            "title": "Phone S10+",
+            "description": "new phone without problems",
+            "category": "phones",
+            "city": "Tetouan",
+            "contryCode": "MA",
+            "price": 650.15,
+            "delivery": "Shipping"
+        }
+    ],
+    "required": [
+        "title",
+        "description",
+        "category",
+        "city",
+        "contryCode",
+        "price",
+        "delivery"
+    ],
+    "properties": {
+        "title": {
+            "$id": "#/properties/title",
+            "default": "",
+            "description": "An explanation about the purpose of this instance.",
+            "examples": [
+                "Phone S10+"
+            ],
+            "title": "The title schema",
+            "minLength": 1,
+            "type": "string"
+        },
+        "description": {
+            "$id": "#/properties/description",
+            "default": "",
+            "description": "An explanation about the purpose of this instance.",
+            "examples": [
+                "new phone without problems"
+            ],
+            "minLength": 5,
+            "title": "The description schema",
+            "type": "string"
+        },
+        "category": {
+            "$id": "#/properties/category",
+            "default": "",
+            "description": "An explanation about the purpose of this instance.",
+            "examples": [
+                "phones"
+            ],
+            "title": "The category schema",
+            "minLength": 1,
+            "type": "string"
+        },
+        "city": {
+            "$id": "#/properties/city",
+            "default": "",
+            "description": "An explanation about the purpose of this instance.",
+            "examples": [
+                "Tetouan"
+            ],
+            "title": "The city schema",
+            "minLength": 1,
+            "type": "string"
+        },
+        "contryCode": {
+            "$id": "#/properties/contryCode",
+            "default": "",
+            "description": "An explanation about the purpose of this instance.",
+            "examples": [
+                "MA"
+            ],
+            "title": "The contryCode schema",
+            "maxLength": 2,
+            "minLength": 2,
+            "type": "string"
+        },
+        "price": {
+            "$id": "#/properties/price",
+            "default": 0.0,
+            "description": "An explanation about the purpose of this instance.",
+            "examples": [
+                650.15
+            ],
+            "title": "The price schema",
+            "minimum": 0.0,
+            "type": "number"
+        },
+        "delivery": {
+            "$id": "#/properties/delivery",
+            "default": "",
+            "description": "An explanation about the purpose of this instance.",
+            "examples": [
+                "Shipping"
+            ],
+            "title": "The delivery schema",
+            "enum": [
+                "Pickup",
+                "Shipping"
+            ],
+            "type": "string"
+        }
+    },
+    "additionalProperties": false
+}

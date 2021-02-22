@@ -1,0 +1,41 @@
+{
+  "name": "graded-exercice",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "ajv": "^7.0.4",
+    "bcryptjs": "^2.4.3",
+    "chai": "^4.3.0",
+    "chai-http": "^4.3.0",
+    "chai-json-schema-ajv": "^5.2.3",
+    "cors": "^2.8.5",
+    "express": "^4.17.1",
+    "has-value": "^2.0.2",
+    "jsonwebtoken": "^8.5.1",
+    "mocha": "^8.3.0",
+    "multer": "^1.4.2",
+    "passport": "^0.4.1",
+    "passport-http": "^0.3.0",
+    "passport-jwt": "^4.0.0",
+    "uuid": "^8.3.2"
+  },
+  "directories": {
+    "test": "test"
+  },
+  "devDependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/hatimmrabet/graded-exercice-API.git"
+  },
+  "bugs": {
+    "url": "https://github.com/hatimmrabet/graded-exercice-API/issues"
+  },
+  "homepage": "https://github.com/hatimmrabet/graded-exercice-API#readme",
+  "description": ""
+}
