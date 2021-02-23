@@ -31,7 +31,7 @@ var storage = cloudinaryStorage({
 });
 
 var parser = multer({ storage: storage});
-var upload = parser
+
 //  Return all items information
 router.get('/',
     passport.authenticate('jwt', { session: false }),
