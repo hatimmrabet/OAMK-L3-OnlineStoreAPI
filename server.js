@@ -60,9 +60,10 @@ module.exports = {
       console.log('  /users/{username}\t\t[GET]');
       console.log('  /users/login\t\t\t[GET]');
       console.log('-- Private endpoints :');
-      console.log('  /items\t\t\t[GET, POST]');
-      console.log('  /items/{itemID}\t\t[GET, PUT, DELETE]');
-      console.log('  /items/{itemID}/images\t[POST, PUT]');
+      console.log('  /items\t\t\t\t[GET, POST]');
+      console.log('  /items/{itemID}\t\t\t[GET, PUT, DELETE]');
+      console.log('  /items/{itemID}/images\t\t[POST]');
+      console.log('  /items/{itemID}/images/{imageID}\t[PUT]');
       console.log('-- Public endpoints :');
       console.log('  /items/search-by/category/{categoryName}\t\t[GET]');
       console.log('  /items/search-by/location/{contryCode}/{cityName\t[GET]');
