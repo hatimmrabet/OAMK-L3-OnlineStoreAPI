@@ -36,7 +36,7 @@ var parser = multer({ storage: storage});
 router.get('/',
     passport.authenticate('jwt', { session: false }),
     (req, res) => {
-        let userItems = items.getAllItems();
+        let userItems = items.getAllItemsByUserID(req.user.id);
         res.status(200);
         res.json(userItems);
 });
