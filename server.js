@@ -9,42 +9,8 @@ const cors = require('cors');
 app.use(bodyParser.json());
 app.use(cors());
 
-var cloudinary = require('cloudinary');
-var cloudinaryStorage = require('multer-storage-cloudinary');
-var multer = require('multer');
-
-cloudinary.config({
-  cloud_name: process.env.CLOUD_NAME,
-  api_key: process.env.API_KEY,
-  api_secret: process.env.API_SECRET
-  });
-
-// Config cloudinary storage for multer-storage-cloudinary
-var storage = cloudinaryStorage({
-  cloudinary: cloudinary,
-  folder: '', // give cloudinary folder where you want to store images
-  allowedFormats: ['jpg', 'png'],
-});
-
-
-var parser = multer({ storage: storage });
-
 // You can store key-value pairs in express, here we store the port setting
 app.set('port', (process.env.PORT || port));
-
-// Simple hello world route
-app.get('/', function(req, res) {
-    res.send("Welcome to My API, Hatim M'rabet");
-});
-
-// POST route for reciving the uploads. multer-parser will handle the incoming data based on the 'image' key
-// Once multer has completed the upload to cloudinary, it will come to the handling function
-// below, which then sends the 201 (CREATED) response. Notice that error handling has not been properly implemented.
-app.post('/upload', parser.single('image'), function (req, res) {
-    console.log(req.file);
-    res.status(201);
-    res.json(req.file);
-});
 
 app.get('/', function(req, res) {
     res.send("Welcome to My API, M'rabet El Khomssi Hatim");
@@ -86,20 +52,20 @@ let serverInstance = null;
 module.exports = {
   start: function() {
     serverInstance = app.listen(app.get('port'), () => {
-        console.log(`\nExample API listening on http://localhost:`+app.get('port'));
-        console.log('Available API endpoints');
-        console.log('-- Private endpoints :');
-		console.log('  /users \t\t\t[GET, POST]');
-        console.log('  /users/{username}\t\t[GET]');
-        console.log('  /users/login\t\t\t[GET]');
-		console.log('  /items\t\t\t[GET, POST]');
-		console.log('  /items/{itemID}\t\t[GET, PUT, DELETE]');
-		console.log('  /items/{itemID}/images\t[POST, PUT]');
-		console.log('-- Public endpoints :');
-		console.log('  /items/search-by/category/{categoryName}\t\t[GET]');
-		console.log('  /items/search-by/location/{contryCode}/{cityName\t[GET]');
-		console.log('  /items/search-by/date/{startDate}/{endDate}\t\t[GET]');
-        console.log(' -> Use for example curl or Postman tools to send HTTP requests to the endpoints\t');
+      console.log(`\nExample API listening on http://localhost:`+app.get('port'));
+      console.log('Available API endpoints');
+      console.log('-- Private endpoints :');
+      console.log('  /users \t\t\t[GET, POST]');
+      console.log('  /users/{username}\t\t[GET]');
+      console.log('  /users/login\t\t\t[GET]');
+      console.log('  /items\t\t\t[GET, POST]');
+      console.log('  /items/{itemID}\t\t[GET, PUT, DELETE]');
+      console.log('  /items/{itemID}/images\t[POST, PUT]');
+      console.log('-- Public endpoints :');
+      console.log('  /items/search-by/category/{categoryName}\t\t[GET]');
+      console.log('  /items/search-by/location/{contryCode}/{cityName\t[GET]');
+      console.log('  /items/search-by/date/{startDate}/{endDate}\t\t[GET]');
+      console.log(' -> Use for example curl or Postman tools to send HTTP requests to the endpoints\t');
     })
   },
   startTest: function() { //start server for Mocha tests

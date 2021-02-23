@@ -1,6 +1,6 @@
 {
   "name": "graded-exercice",
-  "version": "1.0.2",
+  "version": "2.0.0",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
@@ -20,7 +20,6 @@
     "has-value": "^2.0.2",
     "jsonwebtoken": "^8.5.1",
     "mocha": "^8.3.0",
-    "multer": "^1.4.2",
     "multer-storage-cloudinary": "^1.2.1",
     "passport": "^0.4.1",
     "passport-http": "^0.3.0",
@@ -39,5 +38,5 @@
     "url": "https://github.com/hatimmrabet/graded-exercice-API/issues"
   },
   "homepage": "https://github.com/hatimmrabet/graded-exercice-API#readme",
-  "description": ""
+  "description": "API of the graded exercice"
 }

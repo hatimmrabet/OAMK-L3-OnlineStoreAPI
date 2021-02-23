@@ -1,4 +1,5 @@
 const fs = require('fs');
+const { v4: uuidv4 } = require('uuid');
 const express = require('express');
 const has = require('has-value');
 const router = express.Router();
@@ -6,13 +7,36 @@ const itemsSchema = require('./schemas/itemsSchema.json');
 const Ajv = require('ajv').default;
 const items = require('../services/items');
 const passport = require('passport');
+var cloudinary = require('cloudinary');
+var cloudinaryStorage = require('multer-storage-cloudinary');
+var multer = require('multer');
+/*
+cloudinary.config({
+    cloud_name: process.env.CLOUD_NAME,
+    api_key: process.env.API_KEY,
+    api_secret: process.env.API_SECRET
+});
+*/
+  cloudinary.config({
+    cloud_name: 'hpnljlp4q',
+    api_key: '567443919215115',
+    api_secret: '1ftsuFjubA3N1a_kwO_cZAgxHMc'
+});
 
+// Config cloudinary storage for multer-storage-cloudinary
+var storage = cloudinaryStorage({
+  cloudinary: cloudinary,
+  folder: 'upload/', // give cloudinary folder where you want to store images
+  allowedFormats: ['jpg', 'png'],
+});
 
+var parser = multer({ storage: storage});
+var upload = parser
 //  Return all items information
 router.get('/',
     passport.authenticate('jwt', { session: false }),
     (req, res) => {
-        let userItems = items.getAllItemsByUserID(req.user.id);
+        let userItems = items.getAllItems();
         res.status(200);
         res.json(userItems);
 });
@@ -103,140 +127,89 @@ router.put('/:itemID',
 
 router.post('/:ItemID/images',
     passport.authenticate('jwt', { session: false }),
-    function (req, res) {
-        upload(req, res, function (err) {
-            if (err instanceof multer.MulterError) {    // A Multer error occurred when uploading.
-                res.status(400);
-                if(err.code == "LIMIT_UNEXPECTED_FILE")
-                {
-                    res.json({error : "You can't add more than 4 images",err})
-                }
-                else
-                {
-                    res.json(err);
-                }
-                return
-            }
-            else if (err)     // An unknown error occurred when uploading.
-            {   
-                res.json(err);
-                return
-            }            
-            item = items.getItemByID(req.params.ItemID);
-            if(item === undefined)   //item not found
+    parser.single('image'), function (req, res) {
+        item = items.getItemByID(req.params.ItemID);
+        if(item === undefined)   //item not found
+        {
+            cloudinary.uploader.destroy(req.file.public_id);
+            res.status(404);
+            res.send("itemID not found");
+        }
+        else if(item.sellerID != req.user.id)    //try to add pictures to an item that not his item
+        {
+            cloudinary.uploader.destroy(req.file.public_id);
+            res.status(403);
+            res.send("You can't add images to this Item, You are not the seller of this Item");
+        }
+        else if(item.images.length >= 4 )
+        {
+            cloudinary.uploader.destroy(req.file.public_id);
+            res.status(400).send("You can't add more than 4 images");
+        }
+        else
+        {            
+            item.images.push({
+                id: uuidv4(),
+                public_id: req.file.public_id,
+                path: req.file.url,
+                created: new Date().toISOString()
+            });
+            res.status(201);
+            res.json({
+                id: item.id,
+                images: item.images,
+                created: item.created
+            });
+        }
+});
+
+router.put('/:ItemID/images/:imageID',
+    passport.authenticate('jwt', { session: false }),
+    parser.single('image'), function (req, res) {
+        item = items.getItemByID(req.params.ItemID);
+        if(item === undefined)   //item not found
+        {
+            cloudinary.uploader.destroy(req.file.public_id);
+            res.status(404);
+            res.send("itemID not found");
+        }
+        else if(item.sellerID != req.user.id)    //try to add pictures to an item that not his item
+        {
+            cloudinary.uploader.destroy(req.file.public_id);
+            res.status(403);
+            res.send("You can't modify this Item, You are not the seller of this Item");
+        }
+        else if(item.images.length == 0)
+        {
+            cloudinary.uploader.destroy(req.file.public_id);
+            res.status(400);
+            res.send("Not modified, you don't have images to modify, You should add images first")
+        }
+        else
+        {            
+            img = item.images.find(i => i.id == req.params.imageID);
+            if(img === undefined)
             {
-                req.files.forEach(i => {
-                    fs.unlinkSync(i.path);
-                });
+                cloudinary.uploader.destroy(req.file.public_id);
                 res.status(404);
-                res.send("itemID not found");
-            }
-            else if(item.sellerID != req.user.id)    //try to add pictures to an item that not his item
-            {
-                req.files.forEach(i => {
-                    fs.unlinkSync(i.path);
-                });
-                res.status(403);
-                res.send("You can't add images to this Item, You are not the seller of this Item");
-            }
-            else if(item.images.length + req.files.length > 4 )
-            {
-                req.files.forEach(i => {
-                    fs.unlinkSync(i.path);
-                });
-                res.status(400).send("You can't add more than 4 images");
+                res.send("imageID not found");
             }
             else
             {
-                let newFilePath;
-                req.files.forEach(f => {
-                    newFilePath = './uploads/' + f.filename + f.originalname;
-                    item.images.push({
-                        path: newFilePath,
-                        created: new Date().toISOString()
-                    });
-                    fs.renameSync(f.path, newFilePath);
-                })
-                res.status(201);
+                console.log(img);
+                cloudinary.uploader.destroy(img.public_id);
+                img.public_id = req.file.public_id;
+                img.path = req.file.url;
+                img.created = new Date().toISOString();
+                res.status(200);
                 res.json({
                     id: item.id,
                     images: item.images,
                     created: item.created
                 });
-            }
-        })
-});
 
-router.put('/:ItemID/images',
-    passport.authenticate('jwt', { session: false }),
-    function (req, res) {
-        upload(req, res, function (err) {
-            if (err instanceof multer.MulterError) {    // A Multer error occurred when uploading.
-                res.status(400);
-                if(err.code == "LIMIT_UNEXPECTED_FILE")
-                {
-                    res.json({error : "You can't add more than 4 images",err})
-                }
-                else
-                {
-                    res.json(err);
-                }
-                return
             }
-            else if (err)   // An unknown error occurred when uploading.
-            {   
-                res.json(err);
-                return
-            }
-            let item = items.getItemByID(req.params.ItemID);
-            if(item === undefined)   //item not found
-            {
-                req.files.forEach(i => {
-                    fs.unlinkSync(i.path);
-                });
-                res.status(404);
-                res.send("itemID not found");
-            }
-            else if(item.sellerID != req.user.id)    //try to modify an item that not his item
-            {
-                req.files.forEach(i => {
-                    fs.unlinkSync(i.path);
-                });
-                res.status(403);
-                res.send("You can't modify this Item, You are not the seller of this Item");
-            }
-            else if(item.images.length == 0)
-            {
-                req.files.forEach(i => {
-                    fs.unlinkSync(i.path);
-                });
-                res.status(400);
-                res.send("Not modified, you don't have images to modify, You should add images first")
-            }
-            else
-            {
-                //delete old pictures
-                item.images.forEach(i => {
-                    fs.unlinkSync(i.path);
-                });
-                item.images = [];
-                req.files.forEach(f => {
-                    newFilePath = './uploads/' + f.filename + f.originalname;
-                    item.images.push({
-                        path: newFilePath,
-                        created: new Date().toISOString()
-                    });
-                    fs.renameSync(f.path, newFilePath);
-                })
-                item.modified = new Date().toISOString();
-                res.status(200);
-                res.json({
-                    id: item.id,
-                    images: item.images,
-                    modified: item.modified 
-                });
-            }
-        })
+        }
 });
 
 router.delete('/:itemID',

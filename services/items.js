@@ -73,7 +73,12 @@ module.exports = {
         }
     },
     getAllItems: () => {
-        return itemsData.items;
+        let tab = [];
+        itemsData.items.forEach(i => {
+            i.seller = users.getContactInfo(i.sellerID);
+            tab.push(i);  //add the item to return array
+        });
+        return tab;
     },
     getItemByID: (id) => {
         let item = itemsData.items.find(i => i.id == id);
