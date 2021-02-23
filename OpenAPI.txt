@@ -1,0 +1,981 @@
+openapi: 3.0.0
+info:
+  title: eShoppingAPI
+  version: '1.0'
+  description: |-
+    eShopping API for a platform of selling and buying used items
+    /users             [GET, POST]\n
+    /users/{username}  [GET]
+    /users/login       [GET]
+    --- Private endpoints
+    /items                 [GET, POST]
+    /items/{itemID}        [GET, PUT, DELETE]
+    /items/{itemID}/images [POST]
+    /items/{itemID}/images/{imageID} [PUT]
+    --- Public endpoints
+    /items/search-by/category/{categoryName}           [GET]
+    /items/search-by/location/{contryCode}/{cityName}  [GET]
+    /items/search-by/date/{startDate}/{endDate}        [GET]
+  contact:
+    email: mrabet.hatim2018@gmail.com
+    name: Hatim M'rabet
+servers:
+  - description: ''
+    url: 'https://graded-exercice-api.herokuapp.com/'
+paths:
+  /users:
+    parameters: []
+    post:
+      summary: POST a new user
+      operationId: post-users
+      responses:
+        '201':
+          $ref: '#/components/responses/201-created'
+        '400':
+          description: 'Bad Request, Missing data or contains invalid data type in a field'
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: string
+                  example: should have required property 'username'
+              examples:
+                example-1:
+                  value:
+                    - should have required property 'username'
+        '409':
+          description: 'Conflit, username exist already'
+          content:
+            application/json:
+              schema:
+                type: string
+                default: 'Conflit, username exist already'
+              examples:
+                example-1:
+                  value: 'Conflit, username exist already'
+      description: Create a new user account
+      requestBody:
+        content:
+          application/json:
+            schema:
+              description: ''
+              type: object
+              properties:
+                username:
+                  type: string
+                  minLength: 1
+                  description: user username
+                password:
+                  type: string
+                  minLength: 1
+                  format: password
+                firstName:
+                  type: string
+                  minLength: 1
+                lastName:
+                  type: string
+                  minLength: 1
+                dateOfBirth:
+                  type: string
+                  minLength: 1
+                  format: date
+                email:
+                  type: string
+                  minLength: 1
+                  format: email
+                gender:
+                  type: string
+                  minLength: 1
+                  enum:
+                    - male
+                    - female
+                phoneNumber:
+                  type: string
+                  minLength: 1
+                  description: phone number with contry code (+33)
+                city:
+                  type: string
+                  minLength: 1
+                contryCode:
+                  type: string
+                  minLength: 2
+                  maxLength: 2
+                  description: COUNTRY CODE ALPHA-2
+              required:
+                - username
+                - password
+                - firstName
+                - lastName
+                - dateOfBirth
+                - email
+                - gender
+                - phoneNumber
+                - city
+                - contryCode
+            examples:
+              example-1:
+                value:
+                  username: gdfgfsdgsd
+                  password: 11d11
+                  firstName: Hatim
+                  lastName: M'rabet El Khomssi
+                  dateOfBirth: '2000-06-30'
+                  email: hatimmrabet2@gmail.com
+                  gender: male
+                  phoneNumber: '+33618256737'
+                  city: Helsinki
+                  contryCode: FI
+        description: Body request to create a new user account
+    get:
+      summary: GET all users
+      operationId: get-users
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/userData'
+              examples:
+                example-1:
+                  value:
+                    - id: 497f6eca-6276-4993-bfeb-53cbbbba6f08
+                      username: string
+                      password: $2a$12$bqyCSyQK2wty/67qi5PmN.JeXunMKOsPctJrXyL7r3Yii8JcAnANa
+                      firstName: string
+                      lastName: string
+                      dateOfBirth: '2019-08-24'
+                      email: hatim2@gmail.com
+                      gender: male
+                      phoneNumber: '+212618256737'
+                      city: string
+                      contryCode: FI
+                      created: '2019-08-24T14:15:22Z'
+                    - id: f1475893-f1a5-46aa-a952-3bf299d2a661
+                      username: ihabova
+                      password: $2a$12$bqyCSyQK2wty/67qi5PmN.JeXunMKOsPctJrXyL7r3Yii8JcAnANa
+                      firstName: iheb
+                      lastName: chemkhi
+                      dateOfBirth: '1999-06-30'
+                      email: ihebova@gmail.com
+                      gender: male
+                      phoneNumber: '+33618256737'
+                      city: Helsinki
+                      contryCode: FI
+                      created: '2021-02-15T16:20:59.591Z'
+      description: GET all users data
+      parameters: []
+  /users/login:
+    get:
+      summary: GET login
+      operationId: get-users-login
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  token:
+                    type: string
+                    format: string
+                required:
+                  - token
+              examples:
+                example-1:
+                  value:
+                    token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiYjllMTY3NDEtNTRjMi00MjNlLTlmZDEtNzYwYTkxOGE4ODAwIiwidXNlcm5hbWUiOiJoYXRpbW1yYWJldDIiLCJlbWFpbCI6ImhhdGltbXJhYmV0MkBnbWFpbC5jb20ifSwiaWF0IjoxNjEzODM5Nzk0LCJleHAiOjE2MTM5MjYxOTR9.5-A2BswtakZ4f8k_OJI-7ZOlRb5eivIlBXXINYj8ex0
+        '401':
+          description: 'Unauthorized, Missing or incorrect data'
+          content:
+            application/json:
+              schema:
+                type: string
+                example: Unauthorized
+                default: Unauthorized
+              examples: {}
+          headers: {}
+      security:
+        - HTTP Basic: []
+      description: 'Login to a user account '
+  /items:
+    parameters: []
+    post:
+      summary: POST new item
+      operationId: post-users-username-items
+      responses:
+        '201':
+          $ref: '#/components/responses/201-created'
+        '400':
+          $ref: '#/components/responses/400-bad-request'
+        '401':
+          $ref: '#/components/responses/401-error'
+      description: add a new item by a logged user
+      parameters: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/newItem'
+            examples:
+              example-2:
+                value:
+                  title: string
+                  description: string
+                  category: string
+                  city: string
+                  contryCode: string
+                  price: 0
+                  delivery: Pickup
+        description: ''
+      security:
+        - JWT Token: []
+    get:
+      summary: GET all user items
+      operationId: get-users-username-items
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/allItemsData'
+              examples:
+                example-1:
+                  value:
+                    - id: 497f6eca-6276-4993-bfeb-53cbbbba6f08
+                      title: Phone S10+
+                      description: new phone without problems
+                      category: phones
+                      city: Tetouan
+                      contryCode: MA
+                      images:
+                        - path: 'http://example.com'
+                          created: '2019-08-24T14:15:22Z'
+                      price: 650.15
+                      postingDate: '2019-08-24'
+                      delivery: Shipping
+                      created: '2019-08-24T14:15:22Z'
+                      sellerID: 2b49cb0a-0d18-4c09-936a-2e07de75df9c
+                      seller:
+                        firstName: string
+                        lastName: string
+                        email: user@example.com
+                        phoneNumber: string
+        '401':
+          description: Unauthorized
+      description: 'GET all items of the connected user, with seller contact information'
+      security:
+        - JWT Token: []
+  '/items/{itemID}':
+    parameters:
+      - schema:
+          type: string
+          format: uuid
+          example: a52fa527-33c8-400a-b8bf-4e734ca963b0
+        name: itemID
+        in: path
+        required: true
+        description: item UUID ID
+    get:
+      summary: GET an item by itemID
+      tags: []
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/itemData'
+              examples:
+                example-1:
+                  value:
+                    id: 497f6eca-6276-4993-bfeb-53cbbbba6f08
+                    title: Phone S10+
+                    description: new phone without problems
+                    category: phones
+                    city: Tetouan
+                    contryCode: MA
+                    images:
+                      - path: 'http://example.com'
+                        created: '2019-08-24T14:15:22Z'
+                    price: 650.15
+                    postingDate: '2019-08-24'
+                    delivery: Shipping
+                    created: '2019-08-24T14:15:22Z'
+                    sellerID: 2b49cb0a-0d18-4c09-936a-2e07de75df9c
+                    seller:
+                      firstName: string
+                      lastName: string
+                      email: user@example.com
+                      phoneNumber: string
+    put:
+      summary: PUT an item by itemID
+      operationId: put-users-userId-items-itemID
+      responses:
+        '200':
+          $ref: '#/components/responses/modified'
+        '400':
+          description: Bad Request
+        '401':
+          description: Unauthorized
+        '403':
+          description: 'Forbidden, you are not the seller of this item'
+      description: modify a user item
+      parameters: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/newItem'
+            examples:
+              example-1:
+                value:
+                  title: Phone S10+
+                  description: new phone without problems
+                  category: phones
+                  city: Tetouan
+                  contryCode: MA
+                  price: 650.15
+                  delivery: Shipping
+      security:
+        - JWT Token: []
+    delete:
+      summary: DELETE a user item by itemID
+      operationId: delete-users-userID-items-itemID
+      responses:
+        '200':
+          description: Deleted
+        '401':
+          description: 'Unauthorized, not logged in'
+        '403':
+          description: 'Forbidden, you are not the seller of this item'
+        '404':
+          description: Not Found
+      description: Delete an user item
+      security:
+        - JWT Token: []
+  '/items/search-by/category/{categorieName}':
+    get:
+      summary: GET items by Category Name
+      tags: []
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/allItemsData'
+              examples:
+                example-1:
+                  value:
+                    - id: 497f6eca-6276-4993-bfeb-53cbbbba6f08
+                      title: Phone S10+
+                      description: new phone without problems
+                      category: phones
+                      city: Tetouan
+                      contryCode: MA
+                      images:
+                        - path: 'http://example.com'
+                          created: '2019-08-24T14:15:22Z'
+                      price: 650.15
+                      postingDate: '2019-08-24'
+                      delivery: Shipping
+                      created: '2019-08-24T14:15:22Z'
+                      sellerID: 2b49cb0a-0d18-4c09-936a-2e07de75df9c
+                      seller:
+                        firstName: string
+                        lastName: string
+                        email: user@example.com
+                        phoneNumber: string
+      operationId: get-items-search-by-categorie
+      description: GET items by Category Name
+    parameters:
+      - schema:
+          type: string
+        name: categorieName
+        in: path
+        required: true
+  '/items/search-by/location/{contryCode}/{cityName}':
+    parameters:
+      - schema:
+          type: string
+          minLength: 2
+          maxLength: 2
+        name: contryCode
+        in: path
+        description: Contry code (ISO 3166-1 alpha-2)
+        required: true
+      - schema:
+          type: string
+        name: cityName
+        in: path
+        required: true
+        description: 'city Name '
+    get:
+      summary: GET items by Location
+      tags: []
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/allItemsData'
+              examples:
+                example-1:
+                  value:
+                    - id: 497f6eca-6276-4993-bfeb-53cbbbba6f08
+                      title: Phone S10+
+                      description: new phone without problems
+                      category: phones
+                      city: Tetouan
+                      contryCode: MA
+                      images:
+                        - path: 'http://example.com'
+                          created: '2019-08-24T14:15:22Z'
+                      price: 650.15
+                      postingDate: '2019-08-24'
+                      delivery: Shipping
+                      created: '2019-08-24T14:15:22Z'
+                      sellerID: 2b49cb0a-0d18-4c09-936a-2e07de75df9c
+                      seller:
+                        firstName: string
+                        lastName: string
+                        email: user@example.com
+                        phoneNumber: string
+        '400':
+          description: 'Bad Request, incorrect parametre'
+      operationId: get-items-search-by-location-contryCode-cityName
+      description: GET items by contryCode and cityName
+  '/items/search-by/date/{startDate}/{endDate}':
+    parameters:
+      - schema:
+          type: string
+          format: date
+        name: startDate
+        in: path
+        required: true
+        description: date of start
+      - schema:
+          type: string
+          format: date
+        name: endDate
+        in: path
+        required: true
+        description: date of end
+    get:
+      summary: GET items by Start and End Dates
+      tags: []
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/allItemsData'
+              examples:
+                example-1:
+                  value:
+                    - id: 497f6eca-6276-4993-bfeb-53cbbbba6f08
+                      title: Phone S10+
+                      description: new phone without problems
+                      category: phones
+                      city: Tetouan
+                      contryCode: MA
+                      images:
+                        - path: 'http://example.com'
+                          created: '2019-08-24T14:15:22Z'
+                      price: 650.15
+                      postingDate: '2019-08-24'
+                      delivery: Shipping
+                      created: '2019-08-24T14:15:22Z'
+                      sellerID: 2b49cb0a-0d18-4c09-936a-2e07de75df9c
+                      seller:
+                        firstName: string
+                        lastName: string
+                        email: user@example.com
+                        phoneNumber: string
+      operationId: get-items-search-by-date-startDate-endDate
+      description: GET items by Start and End Dates
+  '/items/{itemID}/images':
+    parameters:
+      - schema:
+          type: string
+          format: uuid
+        name: itemID
+        in: path
+        required: true
+        description: item UUID
+    post:
+      summary: POST new image to an item
+      operationId: post-items-itemID-images
+      responses:
+        '201':
+          $ref: '#/components/responses/images'
+        '400':
+          description: 'Bad Request, you can''t add more than 4 pictures.'
+        '401':
+          $ref: '#/components/responses/401-error'
+        '403':
+          description: 'Forbidden, you are not the seller of this item'
+        '404':
+          description: Item ID Not Found
+      description: Add one image to the item
+      security:
+        - JWT Token: []
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                image:
+                  type: string
+            examples:
+              example-1:
+                value:
+                  images: string
+  '/items/{itemID}/images/{imageID}':
+    parameters:
+      - schema:
+          type: string
+        name: itemID
+        in: path
+        required: true
+        description: the id of the item
+      - schema:
+          type: string
+        name: imageID
+        in: path
+        required: true
+        description: the id of the image
+    put:
+      summary: PUT a new image to an item
+      operationId: put-items-itemID-images-imageID
+      responses:
+        '200':
+          $ref: '#/components/responses/images'
+        '400':
+          description: 'Bad Request, you sould add pictures first, you don''t have any picture'
+        '401':
+          description: Unauthorized
+        '403':
+          description: 'Forbidden, you are not the seller of this item'
+        '404':
+          description: 'Not Found, the itemID or the imageID not found'
+      description: modify the existant image of an item
+      security:
+        - JWT Token: []
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                image:
+                  type: string
+            examples:
+              example-1:
+                value:
+                  images: string
+components:
+  schemas:
+    userData:
+      description: All user data returned by GET method
+      type: object
+      x-examples:
+        example-1:
+          id: b9e16741-54c2-423e-9fd1-760a918a8800
+          username: hatimmrabet2
+          password: $2a$12$bqyCSyQK2wty/67qi5PmN.JeXunMKOsPctJrXyL7r3Yii8JcAnANa
+          firstName: Hatim
+          lastName: M'rabet El Khomssi
+          dateOfBirth: '2000-06-30'
+          email: hatimmrabet2@gmail.com
+          gender: Male
+          phoneNumber: '+33618256737'
+          city: Helsinki
+          contryCode: FI
+          created: '2021-02-15T16:20:59.591Z'
+      title: GETuserData
+      properties:
+        id:
+          type: string
+          minLength: 1
+          format: uuid
+        username:
+          type: string
+          minLength: 1
+        password:
+          type: string
+          minLength: 1
+          format: password
+        firstName:
+          type: string
+          minLength: 1
+        lastName:
+          type: string
+          minLength: 1
+        dateOfBirth:
+          type: string
+          minLength: 1
+          format: date
+          pattern: '^[0-9]{4}-([0][1-9]|[1][0-2])-([0][1-9]|[1-2][0-9]|[3][0-1])$'
+        email:
+          type: string
+          minLength: 1
+          pattern: '^[a-zA-Z0-9]+@[a-zA-Z0-9]+[.][a-zA-Z0-9]+$'
+          example: gmail123@gmail.com
+        gender:
+          type: string
+          enum:
+            - male
+            - female
+        phoneNumber:
+          type: string
+          minLength: 1
+          pattern: '^[+][0-9]{10,14}$'
+          description: phone number with contry code (+33)
+        city:
+          type: string
+          minLength: 1
+        contryCode:
+          type: string
+          minLength: 2
+          maxLength: 2
+          example: FI
+          description: COUNTRY CODE ALPHA-2
+        created:
+          type: string
+          minLength: 1
+          format: date-time
+      required:
+        - id
+        - username
+        - password
+        - firstName
+        - lastName
+        - dateOfBirth
+        - email
+        - gender
+        - phoneNumber
+        - city
+        - contryCode
+        - created
+    allUsersData:
+      title: allUsersData
+      x-examples:
+        example-1:
+          users:
+            - firstName: Hatim
+              lastName: M'rabet El Khomssi
+              dateOfBirth: '2000-06-30'
+              email: hatimmrabet2@gmail.com
+              gender: Male
+              phoneNumber: '+33618256737'
+              city: Helsinki
+              contryCode: FI
+              username: hatimmrabet2
+      type: object
+      properties:
+        users:
+          type: array
+          items:
+            $ref: '#/components/schemas/userData'
+    itemData:
+      title: itemData
+      type: object
+      x-examples:
+        example-1:
+          id: 497f6eca-6276-4993-bfeb-53cbbbba6f08
+          title: Phone S10+
+          description: new phone without problems
+          category: phones
+          city: Tetouan
+          contryCode: MA
+          images:
+            - path: 'http://example.com'
+              created: '2019-08-24T14:15:22Z'
+          price: 650.15
+          postingDate: '2019-08-24'
+          delivery: Shipping
+          created: '2019-08-24T14:15:22Z'
+          sellerID: 2b49cb0a-0d18-4c09-936a-2e07de75df9c
+          seller:
+            firstName: string
+            lastName: string
+            email: user@example.com
+            phoneNumber: string
+      description: one item data
+      properties:
+        id:
+          type: string
+          format: uuid
+        title:
+          type: string
+          example: Phone S10+
+        description:
+          type: string
+          example: new phone without problems
+        category:
+          type: string
+          example: phones
+        city:
+          type: string
+          example: Tetouan
+        contryCode:
+          type: string
+          example: MA
+          description: User Contry code (ISO 3166-1 alpha-2)
+        images:
+          type: array
+          format: uri
+          maxItems: 4
+          minItems: 0
+          items:
+            $ref: '#/components/schemas/images'
+        price:
+          example: 650.15
+          type: number
+        postingDate:
+          type: string
+          format: date
+        delivery:
+          type: string
+          enum:
+            - Shipping
+            - Pickup
+        created:
+          type: string
+          format: date-time
+        sellerID:
+          type: string
+          format: uuid
+        seller:
+          $ref: '#/components/schemas/sellerData'
+      required:
+        - title
+        - category
+        - city
+        - contryCode
+        - price
+        - postingDate
+        - delivery
+        - seller
+        - created
+        - sellerID
+    allItemsData:
+      type: array
+      items:
+        $ref: '#/components/schemas/itemData'
+      x-examples: {}
+    sellerData:
+      description: ''
+      type: object
+      x-examples:
+        example-1:
+          firstName: string
+          lastName: string
+          email: string
+          phoneNumber: string
+      properties:
+        firstName:
+          type: string
+          minLength: 1
+        lastName:
+          type: string
+          minLength: 1
+        email:
+          type: string
+          minLength: 1
+          format: email
+        phoneNumber:
+          type: string
+          minLength: 1
+      required:
+        - firstName
+        - lastName
+        - email
+        - phoneNumber
+    images:
+      title: images
+      type: object
+      x-examples:
+        example:
+          path: 'http://example.com'
+          created: '2019-08-24T14:15:22Z'
+          id: 497f6eca-6276-4993-bfeb-53cbbbba6f08
+          public_id: string
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: image id
+        public_id:
+          type: string
+          format: uri
+          description: autocreated
+        path:
+          type: string
+          format: uri
+        created:
+          type: string
+          format: date-time
+      required:
+        - path
+        - created
+    newItem:
+      description: ''
+      type: object
+      title: ''
+      x-examples:
+        example-1:
+          title: string
+          description: string
+          category: string
+          city: string
+          contryCode: string
+          price: 0
+          delivery: Pickup
+      properties:
+        title:
+          type: string
+          minLength: 1
+        description:
+          type: string
+          minLength: 1
+        category:
+          type: string
+          minLength: 1
+        city:
+          type: string
+          minLength: 1
+        contryCode:
+          type: string
+          minLength: 1
+        price:
+          type: number
+          minimum: 0
+        delivery:
+          type: string
+          minLength: 1
+          enum:
+            - Pickup
+            - Shipping
+      required:
+        - title
+        - description
+        - category
+        - city
+        - contryCode
+        - price
+        - delivery
+  securitySchemes:
+    HTTP Basic:
+      type: http
+      scheme: basic
+    JWT Token:
+      type: http
+      scheme: bearer
+  responses:
+    401-error:
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            type: string
+            example: Unauthorized
+            default: Unauthorized
+          examples: {}
+    201-created:
+      description: Created
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              id:
+                type: string
+                format: uuid
+              created:
+                type: string
+                format: date-time
+          examples:
+            example-1:
+              value:
+                id: 497f6eca-6276-4993-bfeb-53cbbbba6f08
+                created: '2019-08-24T14:15:22Z'
+    400-bad-request:
+      description: 'Bad Request, missing data or data type incorrect'
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              type: string
+              default: 'Bad Request, missing data or data type incorrect'
+          examples:
+            example-1:
+              value:
+                - 'Bad Request, missing data or data type incorrect'
+    modified:
+      description: Item modified
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              id:
+                type: string
+                format: uuid
+              created:
+                type: string
+                format: date-time
+              modified:
+                type: string
+                format: date-time
+            required:
+              - id
+              - created
+              - modified
+          examples:
+            example-1:
+              value:
+                id: 497f6eca-6276-4993-bfeb-53cbbbba6f08
+                created: '2019-08-24T14:15:22Z'
+                modified: '2019-08-24T14:15:22Z'
+    images:
+      description: Example response
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              id:
+                type: string
+                format: uuid
+              images:
+                type: array
+                items:
+                  $ref: '#/components/schemas/images'
+              created:
+                type: string
+                format: date-time
+            required:
+              - id
+              - created
+          examples:
+            example-2:
+              value:
+                id: 497f6eca-6276-4993-bfeb-53cbbbba6f08
+                images:
+                  - id: 497f6eca-6276-4993-bfeb-53cbbbba6f08
+                    public_id: 'http://example.com'
+                    path: 'http://example.com'
+                    created: '2019-08-24T14:15:22Z'
+                created: '2019-08-24T14:15:22Z'
