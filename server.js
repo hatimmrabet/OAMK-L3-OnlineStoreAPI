@@ -18,7 +18,7 @@ cloudinary.config({
   api_key: process.env.API_KEY,
   api_secret: process.env.API_SECRET
   });
-  
+
 // Config cloudinary storage for multer-storage-cloudinary
 var storage = cloudinaryStorage({
   cloudinary: cloudinary,
@@ -34,7 +34,7 @@ app.set('port', (process.env.PORT || port));
 
 // Simple hello world route
 app.get('/', function(req, res) {
-    res.send("Hello world");
+    res.send("Welcome to My API, Hatim M'rabet");
 });
 
 // POST route for reciving the uploads. multer-parser will handle the incoming data based on the 'image' key
