@@ -6,10 +6,19 @@ const userComponent = require('./components/users');
 const itemComponent = require('./components/items');
 const loginComponent = require('./components/login')
 const cors = require('cors');
-/*
+app.use(bodyParser.json());
+app.use(cors());
+
 var cloudinary = require('cloudinary');
 var cloudinaryStorage = require('multer-storage-cloudinary');
+var multer = require('multer');
 
+cloudinary.config({
+  cloud_name: process.env.CLOUD_NAME,
+  api_key: process.env.API_KEY,
+  api_secret: process.env.API_SECRET
+  });
+  
 // Config cloudinary storage for multer-storage-cloudinary
 var storage = cloudinaryStorage({
   cloudinary: cloudinary,
@@ -17,15 +26,26 @@ var storage = cloudinaryStorage({
   allowedFormats: ['jpg', 'png'],
 });
 
+
 var parser = multer({ storage: storage });
-*/
+
 // You can store key-value pairs in express, here we store the port setting
-app.set('port', (process.env.PORT || 80));
+app.set('port', (process.env.PORT || port));
 
-app.use(bodyParser.json());
-app.use(cors());
+// Simple hello world route
+app.get('/', function(req, res) {
+    res.send("Hello world");
+});
 
-/* demonstrate route module/component usage - the dogComponent content is defined in separate file */
+// POST route for reciving the uploads. multer-parser will handle the incoming data based on the 'image' key
+// Once multer has completed the upload to cloudinary, it will come to the handling function
+// below, which then sends the 201 (CREATED) response. Notice that error handling has not been properly implemented.
+app.post('/upload', parser.single('image'), function (req, res) {
+    console.log(req.file);
+    res.status(201);
+    res.json(req.file);
+});
+
 app.get('/', function(req, res) {
     res.send("Welcome to My API, M'rabet El Khomssi Hatim");
 });

@@ -6,9 +6,6 @@ const itemsSchema = require('./schemas/itemsSchema.json');
 const Ajv = require('ajv').default;
 const items = require('../services/items');
 const passport = require('passport');
-const multer  = require('multer');
-const multerUpload = multer({ dest: 'uploads/' });
-const upload = multerUpload.array('images', 4);
 
 
 //  Return all items information
