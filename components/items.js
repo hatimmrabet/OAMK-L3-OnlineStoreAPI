@@ -1,15 +1,15 @@
 const fs = require('fs');
 const { v4: uuidv4 } = require('uuid');
 const express = require('express');
-const has = require('has-value');
 const router = express.Router();
 const itemsSchema = require('./schemas/itemsSchema.json'); 
 const Ajv = require('ajv').default;
 const items = require('../services/items');
 const passport = require('passport');
-var cloudinary = require('cloudinary');
-var cloudinaryStorage = require('multer-storage-cloudinary');
-var multer = require('multer');
+const cloudinary = require('cloudinary');
+const cloudinaryStorage = require('multer-storage-cloudinary');
+const multer = require('multer');
+
 /*
 cloudinary.config({
     cloud_name: process.env.CLOUD_NAME,
