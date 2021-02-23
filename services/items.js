@@ -12,7 +12,26 @@ let itemsData = {
             category: 'TV',
             city: 'Tetouan',
             contryCode: 'MA',
-            images: [],
+            images: [
+                {
+                    id: "fbdaf09c-c3fb-4a88-98c5-8a84124b7b9f",
+                    public_id: "upload/crnazhsv70smef6lendi",
+                    path: "http://res.cloudinary.com/hpnljlp4q/image/upload/v1614080226/upload/crnazhsv70smef6lendi.png",
+                    created: "2021-02-23T11:37:07.401Z"
+                },
+                {
+                    id: "c0a81f95-f901-4e7b-bc11-b00615d2d510",
+                    public_id: "upload/hxae0ncm7z8hxpg5gsjy",
+                    path: "http://res.cloudinary.com/hpnljlp4q/image/upload/v1614080181/upload/hxae0ncm7z8hxpg5gsjy.jpg",
+                    created: "2021-02-23T11:36:22.338Z"
+                },
+                {
+                    id: "59f886b2-9c4c-4349-99de-0253e3412fbd",
+                    public_id: "upload/killwcmcharhjl7khqqg",
+                    path: "http://res.cloudinary.com/hpnljlp4q/image/upload/v1614080185/upload/killwcmcharhjl7khqqg.jpg",
+                    created: "2021-02-23T11:36:26.087Z"
+                }
+            ],
             price: 620.99,
             postingDate: '2019-08-12',
             delivery: 'Pickup',

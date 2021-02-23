@@ -34,11 +34,11 @@ describe('Testing route : [/items/{ItemID}/images]', function () {
             });
         });
 
-        it('[POST /items/{ItemID}/images] => Should return status 200 with all correct info', async function() {
+        it('[POST /items/{ItemID}/images] => Should return status 201 with all correct info', async function() {
             await chai.request(apiAddress)
-                .post('/items/a52fa527-33c8-400a-b8bf-4e734ca963b0/images')
+                .post('/items/25978153-bced-4ff4-ab54-a86517cafaee/images')
                 .set('Authorization', 'Bearer ' + userJwt)
-                .attach("images","./test/picture/testPicture.jpg")
+                .attach("image","./test/picture/testPicture.png")
                 .then(response => {
                     expect(response).to.have.property('status');
                     expect(response.status).to.equal(201);
@@ -52,7 +52,7 @@ describe('Testing route : [/items/{ItemID}/images]', function () {
             await chai.request(apiAddress)
                 .post('/items/e51298e8-f811-4fa9-8386-05035144f00a/images')
                 .set('Authorization', 'Bearer ' + userJwt)
-                .attach("images","./test/picture/testPicture.jpg")
+                .attach("image","./test/picture/testPicture.png")
                 .then(response => {
                     expect(response).to.have.property('status');
                     expect(response.status).to.equal(403);
@@ -66,7 +66,7 @@ describe('Testing route : [/items/{ItemID}/images]', function () {
             await chai.request(apiAddress)
                 .post('/items/0000220000000/images')
                 .set('Authorization', 'Bearer ' + userJwt)
-                .attach("images","./test/picture/testPicture.jpg")
+                .attach("image","./test/picture/testPicture.png")
                 .then(response => {
                     expect(response).to.have.property('status');
                     expect(response.status).to.equal(404);
@@ -78,17 +78,12 @@ describe('Testing route : [/items/{ItemID}/images]', function () {
 
         it('[POST /items/{ItemID}/images] => Should return status 400 if try to add more than 4 images', async function() {
             await chai.request(apiAddress)
-                .post('/items/a52fa527-33c8-400a-b8bf-4e734ca963b0/images')
+                .post('/items/25978153-bced-4ff4-ab54-a86517cafaee/images')
                 .set('Authorization', 'Bearer ' + userJwt)
-                .attach("images","./test/picture/testPicture.jpg")
-                .attach("images","./test/picture/testPicture.jpg")
-                .attach("images","./test/picture/testPicture.jpg")
-                .attach("images","./test/picture/testPicture.jpg")
-                .attach("images","./test/picture/testPicture.jpg")
+                .attach("image","./test/picture/testPicture.png")
                 .then(response => {
                     expect(response).to.have.property('status');
                     expect(response.status).to.equal(400);
-                    expect(response.body.err.code).to.equal("LIMIT_UNEXPECTED_FILE");
                 })
                 .catch(error => {
                     throw error;
@@ -107,11 +102,11 @@ describe('Testing route : [/items/{ItemID}/images]', function () {
                 });
         });
 
-        it('[PUT /items/{itemID}/images] => Should return status 200 if everything is good', async function() {
+        it('[PUT /items/{itemID}/images/{imageID}] => Should return status 200 if everything is good', async function() {
             await chai.request(apiAddress)
-                .put('/items/a52fa527-33c8-400a-b8bf-4e734ca963b0/images')
+                .put('/items/25978153-bced-4ff4-ab54-a86517cafaee/images/fbdaf09c-c3fb-4a88-98c5-8a84124b7b9f')
                 .set('Authorization', 'Bearer ' + userJwt)
-                .attach("images","./test/picture/testPicture.jpg")
+                .attach("image","./test/picture/testPicture.png")
                 .then(response => {
                     expect(response).to.have.property('status');
                     expect(response.status).to.equal(200);
@@ -121,11 +116,11 @@ describe('Testing route : [/items/{ItemID}/images]', function () {
                 });
         });
 
-        it('[PUT /items/{itemID}/images] => Should return status 403 if the item don\'t belong to the connected user', async function() {
+        it('[PUT /items/{itemID}/images/{imageID}] => Should return status 403 if the item don\'t belong to the connected user', async function() {
             await chai.request(apiAddress)
-                .put('/items/e51298e8-f811-4fa9-8386-05035144f00a/images')
+                .put('/items/e51298e8-f811-4fa9-8386-05035144f00a/images/fbdaf09c-c3fb-4a88-98c5-8a84124b7b9f')
                 .set('Authorization', 'Bearer ' + userJwt)
-                .attach("images","./test/picture/testPicture.jpg")
+                .attach("image","./test/picture/testPicture.png")
                 .then(response => {
                     expect(response).to.have.property('status');
                     expect(response.status).to.equal(403);
@@ -135,11 +130,11 @@ describe('Testing route : [/items/{ItemID}/images]', function () {
                 });
         });
 
-        it('[PUT /items/{itemID}/images] => Should return status 404 if item not found', async function() {
+        it('[PUT /items/{itemID}/images/{imageID}] => Should return status 404 if item not found', async function() {
             await chai.request(apiAddress)
-                .put('/items/0000000000000/images')
+                .put('/items/0000000000000/images/fbdaf09c-c3fb-4a88-98c5-8a84124b7b9f')
                 .set('Authorization', 'Bearer ' + userJwt)
-                .attach("images","./test/picture/testPicture.jpg")
+                .attach("image","./test/picture/testPicture.png")
                 .then(response => {
                     expect(response).to.have.property('status');
                     expect(response.status).to.equal(404);
@@ -149,28 +144,23 @@ describe('Testing route : [/items/{ItemID}/images]', function () {
                 });
         });
 
-        it('[PUT /items/{ItemID}/images] => Should return status 404 if try to add more than 4 images', async function() {
+        it('[PUT /items/{ItemID}/images/{imageID}] => Should return status 404 if image not found', async function() {
             await chai.request(apiAddress)
-                .post('/items/a52fa527-33c8-400a-b8bf-4e734ca963b0/images')
+                .post('/items/25978153-bced-4ff4-ab54-a86517cafaee/images/0000000')
                 .set('Authorization', 'Bearer ' + userJwt)
-                .attach("images","./test/picture/testPicture.jpg")
-                .attach("images","./test/picture/testPicture.jpg")
-                .attach("images","./test/picture/testPicture.jpg")
-                .attach("images","./test/picture/testPicture.jpg")
-                .attach("images","./test/picture/testPicture.jpg")
+                .attach("image","./test/picture/testPicture.png")
                 .then(response => {
                     expect(response).to.have.property('status');
-                    expect(response.status).to.equal(400);
-                    expect(response.body.err.code).to.equal("LIMIT_UNEXPECTED_FILE");
+                    expect(response.status).to.equal(404);
                 })
                 .catch(error => {
                     throw error;
                 });
         });
         
-        it('[PUT /items/{itemID}/images] => Should return status 401 if user not logged in', async function() {
+        it('[PUT /items/{itemID}/images/{imageID}] => Should return status 401 if user not logged in', async function() {
             await chai.request(apiAddress)
-                .put('/items/a52fa527-33c8-400a-b8bf-4e734ca963b0/images')
+                .put('/items/a52fa527-33c8-400a-b8bf-4e734ca963b0/images/fbdaf09c-c3fb-4a88-98c5-8a84124b7b9f')
                 .then(response => {
                     expect(response).to.have.property('status');
                     expect(response.status).to.equal(401);

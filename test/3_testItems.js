@@ -270,15 +270,32 @@ describe('Testing route : [/items]', function () {
 
         it('[DELETE /items/{itemID}] => Should return status 200 if item is deleted', async function() {
             await chai.request(apiAddress)
-                .delete('/items/25978153-bced-4ff4-ab54-a86517cafaee')
-                .set('Authorization', 'Bearer ' + userJwt)
-                .then(response => {
-                    expect(response).to.have.property('status');
-                    expect(response.status).to.equal(200);
-                })
-                .catch(error => {
-                    throw error;
-                });
+            .post('/items')
+            .set('Authorization', 'Bearer ' + userJwt)
+            .send({
+                title: "Phone S10+",
+                description: "new phone without problems",
+                category: "phones",
+                city: "Tetouan",
+                contryCode: "MA",
+                price: 650.15,
+                delivery: "Shipping"
+            })
+            .then(response => {
+                expect(response).to.have.property('status');
+                expect(response.status).to.equal(201);
+                expect(response.body).to.be.jsonSchema(objCreatedSchema);
+                return chai.request(apiAddress)
+                        .delete('/items/'+response.body.id)
+                        .set('Authorization', 'Bearer ' + userJwt)
+            })
+            .then(response => {
+                expect(response).to.have.property('status');
+                expect(response.status).to.equal(200);
+            })
+            .catch(error => {
+                throw error;
+            });
         });
 
         it('[DELETE /items/{itemID}] => Should return status 404 if itemID is not found', async function() {
@@ -320,24 +337,4 @@ describe('Testing route : [/items]', function () {
         });
     })
     
-
-    describe("[POST PUT DELETE] same file :", function(){
-        let userJwt = null;
-        let decodedJwt = null;
-    
-        before(async function(){
-          await chai.request(apiAddress)
-            .get('/users/login')
-            .auth('hatimmrabet2', '12345')
-            .then(response => {
-              expect(response).to.have.property('status');
-              expect(response.status).to.equal(200);
-              expect(response.body).to.have.property('token');
-    
-              userJwt = response.body.token;
-              decodedJwt = jsonwebtoken.decode(userJwt, { complete: true });
-            });
-        });
-        
-    })
 })

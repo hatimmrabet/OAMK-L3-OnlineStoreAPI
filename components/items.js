@@ -196,7 +196,6 @@ router.put('/:ItemID/images/:imageID',
             }
             else
             {
-                console.log(img);
                 cloudinary.uploader.destroy(img.public_id);
                 img.public_id = req.file.public_id;
                 img.path = req.file.url;
