@@ -13,8 +13,10 @@ app.use(cors());
 app.set('port', (process.env.PORT || port));
 
 app.get('/', function(req, res) {
+    res.status(200);
     res.send("Welcome to My API, M'rabet El Khomssi Hatim");
 });
+
 app.use('/users/login', loginComponent.router)
 app.use('/users', userComponent);
 app.use('/items', itemComponent);
@@ -54,10 +56,10 @@ module.exports = {
     serverInstance = app.listen(app.get('port'), () => {
       console.log(`\nExample API listening on http://localhost:`+app.get('port'));
       console.log('Available API endpoints');
-      console.log('-- Private endpoints :');
       console.log('  /users \t\t\t[GET, POST]');
       console.log('  /users/{username}\t\t[GET]');
       console.log('  /users/login\t\t\t[GET]');
+      console.log('-- Private endpoints :');
       console.log('  /items\t\t\t[GET, POST]');
       console.log('  /items/{itemID}\t\t[GET, PUT, DELETE]');
       console.log('  /items/{itemID}/images\t[POST, PUT]');
