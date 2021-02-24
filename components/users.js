@@ -66,7 +66,7 @@ router.post('/',
     else
     {
         res.status(409);
-        res.send("Conflit, username exist already")
+        res.json({err:"Conflit, username exist already"});
     }
 });
 
