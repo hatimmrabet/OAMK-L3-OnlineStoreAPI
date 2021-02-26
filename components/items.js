@@ -17,7 +17,7 @@ cloudinary.config({
     api_secret: process.env.API_SECRET
 });
 */
-  cloudinary.config({
+cloudinary.config({
     cloud_name: 'hpnljlp4q',
     api_key: '567443919215115',
     api_secret: '1ftsuFjubA3N1a_kwO_cZAgxHMc'
@@ -228,7 +228,7 @@ router.delete('/:itemID',
         else
         {
             item.images.forEach(i => {
-                fs.unlinkSync(i.path);
+                cloudinary.uploader.destroy(i.public_id);
             });
             items.deleteItem(req.params.itemID);
             res.status(200);
