@@ -83,7 +83,10 @@ function validateItemSchema(req, res, next)
       res.status(400);
       res.send(validate.errors.map(e => e.message));
     }
-    next();
+    else
+    {
+        next();
+    }
 }
 
 router.post('/',
@@ -246,17 +249,9 @@ router.get('/search-by/category/:categorieName',
 
 router.get('/search-by/location/:contryCode/:city',
     (req, res) => {
-        if(req.params.contryCode.length != 2)
-        {
-            res.status(400);
-            res.send("Incorrect parametre ("+req.params.contryCode+")");
-        }
-        else
-        {
-            let result = items.getAllByLocation(req.params.contryCode, req.params.city);
-            res.status(200);
-            res.json(result);
-        }
+        let result = items.getAllByLocation(req.params.contryCode, req.params.city);
+        res.status(200);
+        res.json(result);
 });
 
 router.get('/search-by/date/:startDate/:endDate',
