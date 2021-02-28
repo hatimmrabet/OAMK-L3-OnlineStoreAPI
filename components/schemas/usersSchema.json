@@ -41,7 +41,7 @@
             "examples": [
                 "hatimmrabet2"
             ],
-            "minLength": 1
+            "minLength": 3
         },
         "password": {
             "$id": "#/properties/password",
@@ -63,7 +63,7 @@
             "examples": [
                 "Hatim"
             ],
-            "minLength": 1
+            "minLength": 3
         },
         "lastName": {
             "$id": "#/properties/lastName",
@@ -74,7 +74,7 @@
             "examples": [
                 "M'rabet El Khomssi"
             ],
-            "minLength": 1
+            "minLength": 3
         },
         "dateOfBirth": {
             "$id": "#/properties/dateOfBirth",
@@ -86,7 +86,7 @@
             "title": "The dateOfBirth schema",
             "type": "string",
             "pattern": "^[0-9]{4}-([0][1-9]|[1][0-2])-([0][1-9]|[1-2][0-9]|[3][0-1])$",
-            "minLength": 1
+            "minLength": 3
         },
         "email": {
             "$id": "#/properties/email",
@@ -98,7 +98,7 @@
             "title": "The email schema",
             "type": "string",
             "pattern": "^[a-zA-Z0-9]+@[a-zA-Z0-9]+[.][a-zA-Z0-9]+$",
-            "minLength": 1
+            "minLength": 3
         },
         "gender": {
             "$id": "#/properties/gender",
@@ -113,7 +113,7 @@
                 "female"
             ],
             "type": "string",
-            "minLength": 1
+            "minLength": 3
         },
         "phoneNumber": {
             "$id": "#/properties/phoneNumber",
@@ -137,7 +137,7 @@
             "examples": [
                 "Helsinki"
             ],
-            "minLength": 1
+            "minLength": 3
         },
         "contryCode": {
             "$id": "#/properties/contryCode",
