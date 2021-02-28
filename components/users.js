@@ -50,6 +50,7 @@ function validateNewUserSchema(req, res, next)
     if(isValid == false) {
       res.status(400);
       res.send(validate.errors.map(e => e.message));
+      res.end();
     }
     next();
 }
