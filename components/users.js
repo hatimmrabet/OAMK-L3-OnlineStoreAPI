@@ -6,7 +6,7 @@ const Ajv = require('ajv').default;
 const users = require('../services/users');
 
 //  Return all users information
-router.get('/', (req, res) => { 
+router.get('/', (req, res) => {
     const allUsers = users.getAllUsers();
     res.status(200);
     res.json(allUsers);
@@ -15,61 +15,53 @@ router.get('/', (req, res) => {
 //  Return information of a single user
 router.get('/:username', (req, res) => {
     const resultUser = users.getUserByUsername(req.params.username);
-    if(resultUser === undefined)
-    {
+    if (resultUser === undefined) {
         res.sendStatus(404)
     }
-    else
-    {
+    else {
         res.json(resultUser);
     }
 })
 
-function validateJSONHeaders(req, res, next)
-{
-    if(req.get('Content-Type') === 'application/json')
-    {
+function validateJSONHeaders(req, res, next) {
+    if (req.get('Content-Type') === 'application/json') {
         next();
     }
-    else
-    {
+    else {
         const err = new Error('Bad Request - Missing Headers');
         err.status = 400;
         next(err);
     }
 }
 /* Middleware to validate new user creation */
-function validateNewUserSchema(req, res, next)
-{
+function validateNewUserSchema(req, res, next) {
     const ajv = new Ajv();
     const validate = ajv.compile(usersSchema);
     //console.log(req.body);
     const isValid = validate(req.body);
     //console.log('isValid', isValid);
     //console.log(validate.errors);
-    if(isValid == false) {
-      res.status(400);
-      res.send(validate.errors.map(e => e.message));
-      res.end();
+    if (isValid == false) {
+        res.status(400);
+        res.send(validate.errors.map(e => e.message));
+    } else {
+        next();
     }
-    next();
 }
 
 router.post('/',
-    [ validateJSONHeaders, validateNewUserSchema],
+    [validateJSONHeaders, validateNewUserSchema],
     (req, res) => {
-    if(users.usernameExist(req.body.username) == false)
-    {
-        let newUser = users.addUser(req);          
-        res.status(201);
-        res.json(newUser);
-    }
-    else
-    {
-        res.status(409);
-        res.send("Conflit, username exist already")
-    }
-});
+        if (users.usernameExist(req.body.username) == false) {
+            let newUser = users.addUser(req);
+            res.status(201);
+            res.json(newUser);
+        }
+        else {
+            res.status(409);
+            res.send("Conflit, username exist already")
+        }
+    });
 
 module.exports = router;
 
